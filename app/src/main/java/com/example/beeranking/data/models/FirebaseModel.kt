@@ -8,6 +8,7 @@ class FirebaseModel {
     private val db = Firebase.firestore
 
     private companion object COLLECTIONS {
-        //TODO: add collection names here
+        const val USERS = "users"
+        const val POSTS = "posts"
     }
 }
