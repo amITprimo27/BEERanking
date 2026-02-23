@@ -9,7 +9,7 @@
 
     <!-- Top Purple Section with Beer Icon -->
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/logo_image_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:contentDescription="Beer cheers icon"
@@ -23,7 +23,7 @@
 
     <!-- Main Content ScrollView -->
     <ScrollView
-        android:id="@+id/scroll_content"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/login_content_background"
@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintTop_toBottomOf="@id/logo_image_view"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
             android:padding="24dp">
 
             <TextView
-                android:id="@+id/welcomeTitle"
+                android:id="@+id/welcome_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -56,7 +56,7 @@
 
             <!-- BEERanking title -->
             <TextView
-                android:id="@+id/beerRankingTitle"
+                android:id="@+id/beer_ranking_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -66,13 +66,13 @@
                 android:textColor="#001F52"
                 android:textSize="40sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/welcomeTitle"
+                app:layout_constraintTop_toBottomOf="@+id/welcome_title_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Description -->
             <TextView
-                android:id="@+id/welcomeDescription"
+                android:id="@+id/welcome_description_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -82,13 +82,13 @@
                 android:text="Discover, rate, and share your favorite beers with a community of beer enthusiasts."
                 android:textColor="#666666"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/beerRankingTitle"
+                app:layout_constraintTop_toBottomOf="@+id/beer_ranking_title_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Sign up button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/signUpButton"
+                android:id="@+id/sign_up_button"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="64dp"
@@ -98,13 +98,13 @@
                 android:textStyle="bold"
                 app:backgroundTint="#001F52"
                 app:cornerRadius="25dp"
-                app:layout_constraintBottom_toTopOf="@+id/signInButton"
+                app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Sign in button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/signInButton"
+                android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="64dp"
