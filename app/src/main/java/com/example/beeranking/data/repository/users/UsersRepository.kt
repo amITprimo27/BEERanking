@@ -79,5 +79,45 @@ class UsersRepository private constructor() {
             }
         }
     }
+
+    fun loginUser(email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
+        executor.execute {
+            try {
+                firebaseAuthModel.signInUser(email, password) { authSuccess, authError ->
+                    if (!authSuccess) {
+                        mainHandler.post {
+                            onError(authError ?: "Unknown error during login")
+                        }
+                        return@signInUser
+                    }
+
+                    val currentUser = firebaseAuthModel.getCurrentUser()
+                    if (currentUser == null) {
+                        mainHandler.post {
+                            onError(authError ?: "Unknown error during login")
+                        }
+                        return@signInUser
+                    }
+
+                    firebaseModel.getUser(currentUser.uid) { user, firestoreError ->
+                        if (user == null) {
+                            mainHandler.post {
+                                onError(firestoreError ?: "Failed to fetch user data")
+                            }
+                            return@getUser
+                        }
+
+                        mainHandler.post {
+                            onSuccess(user)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                mainHandler.post {
+                    onError(e.message)
+                }
+            }
+        }
+    }
 }
 
