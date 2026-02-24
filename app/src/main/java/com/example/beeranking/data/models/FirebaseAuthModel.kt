@@ -33,5 +33,15 @@ class FirebaseAuthModel {
             }
     }
 
+    fun signInUser(email: String, password: String, completion: FirebaseAuthCompletion) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { result ->
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
+
     fun getCurrentUser() = auth.currentUser
 }

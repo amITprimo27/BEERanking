@@ -7,6 +7,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 
 typealias FirestoreCompletion = (success: Boolean, error: String?) -> Unit
+typealias FirestoreUserCompletion = (user: User?, error: String?) -> Unit
 
 class FirebaseModel {
     private val db = Firebase.firestore
@@ -25,6 +26,27 @@ class FirebaseModel {
             }
             .addOnFailureListener { exception ->
                 completion(false, exception.message)
+            }
+    }
+
+    fun getUser(userId: String, completion: FirestoreUserCompletion) {
+        db.collection(USERS)
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists() and !document.data.isNullOrEmpty()) {
+                    try {
+                        val user = document.data?.let { User.fromJson(it) }
+                        completion(user, null)
+                    } catch (e: Exception) {
+                        completion(null, e.message)
+                    }
+                } else {
+                    completion(null, "User not found")
+                }
+            }
+            .addOnFailureListener { exception ->
+                completion(null, exception.message)
             }
     }
 }
