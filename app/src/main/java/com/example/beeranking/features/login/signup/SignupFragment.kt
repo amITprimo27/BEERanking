@@ -6,13 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.example.beeranking.R
 import com.example.beeranking.data.repository.users.UsersRepository
 import com.example.beeranking.databinding.FragmentSignupBinding
+import com.example.beeranking.utilis.loader.LoadingIndicator
 
 class SignupFragment : Fragment() {
     private var binding: FragmentSignupBinding? = null
+    private val loader: LoadingIndicator by lazy { LoadingIndicator(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +56,16 @@ class SignupFragment : Fragment() {
             return
         }
 
+        loader.show()
+        disableSignupButton()
+
         UsersRepository.shared.createUser(user, email, password, { createdUser ->
+            loader.hide()
+
             findNavController().navigate(R.id.action_global_app_graph)
         }, { errorMessage ->
+            loader.hide()
+            enableSignupButton()
             Toast.makeText(requireContext(), errorMessage ?: "An error occurred", Toast.LENGTH_SHORT).show()
         })
     }
@@ -74,5 +86,13 @@ class SignupFragment : Fragment() {
             !password.any { it.isDigit() } -> "Password must contain at least one digit"
             else -> null
         }
+    }
+
+    private fun disableSignupButton() {
+        binding?.signupButton?.isEnabled = false
+    }
+
+    private fun enableSignupButton() {
+        binding?.signupButton?.isEnabled = true
     }
 }
