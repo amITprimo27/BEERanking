@@ -38,4 +38,10 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
+    <action
+        android:id="@+id/action_global_app_graph"
+        app:destination="@id/app_graph"
+        app:popUpTo="@id/auth_graph"
+        app:popUpToInclusive="true" />
+
 </navigation>
