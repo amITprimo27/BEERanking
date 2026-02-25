@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.beeranking.R
 import com.example.beeranking.databinding.FragmentFeedBinding
 import com.example.beeranking.features.beer.shared.postList.PostAdapter
 import androidx.fragment.app.viewModels
