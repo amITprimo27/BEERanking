@@ -23,7 +23,9 @@ class MyPostsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.root?.findViewById<BottomNavigationView>(R.id.bottom_nav_bar)?.setOnItemSelectedListener { item ->
+        val bottomNav = binding?.root?.findViewById<BottomNavigationView>(R.id.bottom_nav_bar)
+        bottomNav?.setSelectedItemId(R.id.nav_my_posts)
+        bottomNav?.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_feed -> findNavController().navigate(R.id.feedFragment)
                 R.id.nav_add_post -> findNavController().navigate(R.id.addPostFragment)

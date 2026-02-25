@@ -4,11 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_nav_bar"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     app:menu="@menu/bottom_nav_menu"
     android:background="#FFFFFFFF"
     app:itemIconTint="#FF6200EE"
     app:itemTextColor="#FF6200EE"
+    app:itemIconSize="24dp"
     app:labelVisibilityMode="labeled"
-    android:elevation="8dp"/>
+    android:elevation="8dp"
+    android:paddingVertical="12dp"
+    app:itemRippleColor="#FF6200EE"/>
