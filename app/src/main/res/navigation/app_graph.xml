@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/myPostsFragment"
-        android:name="com.example.beeranking.features.beer.myposts.MyPostsFragment"
+        android:name="com.example.beeranking.features.beer.myPosts.MyPostsFragment"
         android:label="My Posts"
         tools:layout="@layout/fragment_my_posts">
         <action
