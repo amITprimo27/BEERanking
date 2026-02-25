@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.beeranking.databinding.PostRowLayoutBinding
-import com.example.beeranking.model.Post
+import com.example.beeranking.model.PostWithUser
 
 interface OnPostClickListener {
-    fun onPostItemClick(post: Post)
+    fun onPostItemClick(postWithUser: PostWithUser)
 }
 
 class PostAdapter(
-    var posts: MutableList<Post>?,
+    var posts: MutableList<PostWithUser>?,
 ): RecyclerView.Adapter<PostRowViewHolder>() {
 
     var listener: OnPostClickListener? = null

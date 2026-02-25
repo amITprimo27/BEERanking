@@ -1,6 +1,5 @@
 package com.example.beeranking.features.beer.feed
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +10,7 @@ import com.example.beeranking.features.beer.shared.postList.PostAdapter
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.beeranking.features.beer.shared.postList.OnPostClickListener
-import com.example.beeranking.model.Post
+import com.example.beeranking.model.PostWithUser
 
 class FeedFragment : Fragment() {
     private var binding: FragmentFeedBinding? = null
@@ -39,21 +38,20 @@ class FeedFragment : Fragment() {
 
         adapter = PostAdapter(viewModel.data.value)
         adapter?.listener = object : OnPostClickListener {
-
-            override fun onPostItemClick(post: Post) {
+            override fun onPostItemClick(postWithUser: PostWithUser) {
+                // Handle click
             }
         }
         binding?.recyclerView?.adapter = adapter
 
         binding?.swipeRefresh?.setOnRefreshListener {
-            binding?.swipeRefresh?.isRefreshing = true
             refreshData()
         }
 
-        observeStudents()
+        observeData()
     }
 
-    private fun observeStudents() {
+    private fun observeData() {
         viewModel.data.observe(viewLifecycleOwner) {
             adapter?.posts = it
             adapter?.notifyDataSetChanged()
@@ -62,6 +60,12 @@ class FeedFragment : Fragment() {
     }
 
     private fun refreshData() {
-        viewModel.refreshStudents()
+        binding?.swipeRefresh?.isRefreshing = true
+        viewModel.refreshPosts()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

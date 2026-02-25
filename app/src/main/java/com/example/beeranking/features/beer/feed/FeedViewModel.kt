@@ -2,16 +2,15 @@ package com.example.beeranking.features.beer.feed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.beeranking.data.repository.posts.PostsRepository
-import com.example.beeranking.model.Post
+import com.example.beeranking.model.PostWithUser
 
 
 class FeedViewModel: ViewModel() {
 
-    val data: LiveData<MutableList<Post>> = PostsRepository.shared.getAllPosts()
+    val data: LiveData<MutableList<PostWithUser>> = PostsRepository.shared.getAllPostsWithUser()
 
-    fun refreshStudents() {
-        PostsRepository.shared.refreshStudents()
+    fun refreshPosts() {
+        PostsRepository.shared.refreshPosts()
     }
 }

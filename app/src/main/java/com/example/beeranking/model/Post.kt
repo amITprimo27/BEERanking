@@ -1,6 +1,7 @@
 package com.example.beeranking.model
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.beeranking.base.MyApplication
@@ -50,6 +51,7 @@ data class Post (
         const val BEER_BREWERY_KEY = "beerBrewery"
 
         fun fromJson(json: Map<String, Any?>): Post {
+            Log.i("TAG", json.toString())
             val id = json[ID_KEY] as String
             val postedBy = json[POSTED_BY_KEY] as String
             val postImageUrlString = json[POST_IMAGE_URL_STRING_KEY] as String
