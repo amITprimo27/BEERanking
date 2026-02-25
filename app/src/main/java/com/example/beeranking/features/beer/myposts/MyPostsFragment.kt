@@ -1,4 +1,4 @@
-package com.example.beeranking.features.beer.profile
+package com.example.beeranking.features.beer.myposts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.beeranking.R
-import com.example.beeranking.databinding.FragmentProfileBinding
+import com.example.beeranking.databinding.FragmentMyPostsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.findNavController
 
-class ProfileFragment : Fragment() {
-    private var binding: FragmentProfileBinding? = null
+class MyPostsFragment : Fragment() {
+    private var binding: FragmentMyPostsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        this.binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
-
-        return this.binding?.root
+        binding = FragmentMyPostsBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

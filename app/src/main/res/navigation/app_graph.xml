@@ -38,4 +38,14 @@
             app:destination="@id/feedFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/myPostsFragment"
+        android:name="com.example.beeranking.features.beer.myposts.MyPostsFragment"
+        android:label="My Posts"
+        tools:layout="@layout/fragment_my_posts">
+        <action
+            android:id="@+id/action_myPosts_to_feed"
+            app:destination="@id/feedFragment" />
+    </fragment>
+
 </navigation>

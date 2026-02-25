@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".features.beer.profile.ProfileFragment">
+    tools:context=".features.beer.myposts.MyPostsFragment">
 
     <TextView
+        android:id="@+id/my_posts_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile Fragment"
+        android:text="My Posts"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center_horizontal"/>
 
     <FrameLayout
-        android:id="@+id/profile_content_container"
+        android:id="@+id/my_posts_content_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

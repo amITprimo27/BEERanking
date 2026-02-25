@@ -35,12 +35,12 @@ class UsersRepository private constructor() {
     fun createUser(userName: String, email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.createUser(email, password) { authSuccess, authError ->
+                firebaseAuthModel.createUser(email, password) createUserLambda@{ authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during user creation")
                         }
-                        return@createUser
+                        return@createUserLambda
                     }
 
                     val currentUser = firebaseAuthModel.getCurrentUser()
@@ -48,7 +48,7 @@ class UsersRepository private constructor() {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during user creation")
                         }
-                        return@createUser
+                        return@createUserLambda
                     }
 
                     val user = User(
@@ -59,12 +59,12 @@ class UsersRepository private constructor() {
                         lastUpdated = System.currentTimeMillis()
                     )
 
-                    firebaseModel.createUser(user) { firestoreSuccess, firestoreError ->
+                    firebaseModel.createUser(user) createFirebaseLambda@{ firestoreSuccess, firestoreError ->
                         if (!firestoreSuccess) {
                             mainHandler.post {
                                 onError(firestoreError ?: "Unknown error during Firestore save")
                             }
-                            return@createUser
+                            return@createFirebaseLambda
                         }
 
                         mainHandler.post {
@@ -83,12 +83,12 @@ class UsersRepository private constructor() {
     fun loginUser(email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.signInUser(email, password) { authSuccess, authError ->
+                firebaseAuthModel.signInUser(email, password) signInLambda@{ authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during login")
                         }
-                        return@signInUser
+                        return@signInLambda
                     }
 
                     val currentUser = firebaseAuthModel.getCurrentUser()
@@ -96,15 +96,15 @@ class UsersRepository private constructor() {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during login")
                         }
-                        return@signInUser
+                        return@signInLambda
                     }
 
-                    firebaseModel.getUser(currentUser.uid) { user, firestoreError ->
+                    firebaseModel.getUser(currentUser.uid) getUserLambda@{ user, firestoreError ->
                         if (user == null) {
                             mainHandler.post {
                                 onError(firestoreError ?: "Failed to fetch user data")
                             }
-                            return@getUser
+                            return@getUserLambda
                         }
 
                         mainHandler.post {
