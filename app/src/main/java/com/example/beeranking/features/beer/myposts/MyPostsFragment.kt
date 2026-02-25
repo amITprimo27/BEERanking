@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.beeranking.R
 import com.example.beeranking.databinding.FragmentMyPostsBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.navigation.fragment.findNavController
 
 class MyPostsFragment : Fragment() {
     private var binding: FragmentMyPostsBinding? = null
@@ -19,20 +17,5 @@ class MyPostsFragment : Fragment() {
     ): View? {
         binding = FragmentMyPostsBinding.inflate(inflater, container, false)
         return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val bottomNav = binding?.root?.findViewById<BottomNavigationView>(R.id.bottom_nav_bar)
-        bottomNav?.setSelectedItemId(R.id.nav_my_posts)
-        bottomNav?.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_feed -> findNavController().navigate(R.id.feedFragment)
-                R.id.nav_add_post -> findNavController().navigate(R.id.addPostFragment)
-                R.id.nav_my_posts -> findNavController().navigate(R.id.myPostsFragment)
-                R.id.nav_profile -> findNavController().navigate(R.id.profileFragment)
-            }
-            true
-        }
     }
 }
