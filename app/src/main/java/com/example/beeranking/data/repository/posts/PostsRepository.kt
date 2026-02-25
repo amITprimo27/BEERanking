@@ -27,5 +27,30 @@ class PostsRepository private constructor() {
     companion object Companion {
         val shared = PostsRepository()
     }
+
+    fun getAllPosts(): LiveData<MutableList<Post>> {
+        return posts ?: database.postDao.getAllPosts()
+    }
+
+    fun refreshStudents() {
+        val lastUpdated = Post.Companion.lastUpdated
+
+        firebaseModel.getAllPosts(lastUpdated) {
+            executor.execute {
+                var time = lastUpdated
+                for (post in it) {
+                    database.postDao.insertPost(post)
+                    post.lastUpdated?.let { studentLastUpdated ->
+                        if (time < studentLastUpdated) {
+                            time = studentLastUpdated
+                        }
+                    }
+                    Post.Companion.lastUpdated = time
+                }
+            }
+
+        }
+    }
+
 }
 

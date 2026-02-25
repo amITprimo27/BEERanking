@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.beeranking.base.MyApplication
 import java.util.UUID
 
-@Entity
+@Entity()
 data class Post (
 
     @PrimaryKey

@@ -8,4 +8,5 @@ typealias PostCompletion = (Post) -> Unit
 typealias UserCompletion = (User) -> Unit
 typealias StringCompletion = (String?) -> Unit
 
+typealias PostsCompletion = (List<Post>) -> Unit
 

@@ -1,6 +1,9 @@
 package com.example.beeranking.data.models
 
 import android.util.Log
+import com.example.beeranking.base.PostCompletion
+import com.example.beeranking.base.PostsCompletion
+import com.example.beeranking.model.Post
 import com.example.beeranking.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -47,6 +50,18 @@ class FirebaseModel {
             }
             .addOnFailureListener { exception ->
                 completion(null, exception.message)
+            }
+    }
+
+    fun getAllPosts(since: Long, completion: PostsCompletion) {
+        db.collection(POSTS)
+            .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
+            .get()
+            .addOnCompleteListener { result ->
+                when (result.isSuccessful) {
+                    true -> completion(result.result.map { Post.fromJson(it.data) })
+                    false -> completion(emptyList())
+                }
             }
     }
 }
