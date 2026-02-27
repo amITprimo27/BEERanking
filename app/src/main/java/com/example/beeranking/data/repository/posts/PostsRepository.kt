@@ -33,6 +33,10 @@ class PostsRepository private constructor() {
         return database.postDao.getAllPostsWithUser()
     }
 
+    fun getUserPostsWithUser(userId: String): LiveData<MutableList<PostWithUser>> {
+        return database.postDao.getPostsByUserWithUser(userId)
+    }
+
     fun refreshPosts() {
         val lastUpdated = Post.Companion.lastUpdated
 

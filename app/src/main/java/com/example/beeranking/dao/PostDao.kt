@@ -18,6 +18,10 @@ interface PostDao {
     @Query("SELECT * FROM Post")
     fun getAllPostsWithUser(): LiveData<MutableList<PostWithUser>>
 
+    @Transaction
+    @Query("SELECT * FROM Post WHERE postedBy = :userId")
+    fun getPostsByUserWithUser(userId: String): LiveData<MutableList<PostWithUser>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPost(vararg post: Post)
 }
