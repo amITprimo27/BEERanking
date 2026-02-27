@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.circleimageview)
+
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

@@ -23,6 +23,8 @@ room = "2.8.4"
 googleServices = "4.4.2"
 firebaseBom = "34.7.0"
 swiperefreshlayout = "1.2.0"
+circleimageview = "3.1.0"
+
 
 
 [libraries]
@@ -47,6 +49,8 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+
 
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }

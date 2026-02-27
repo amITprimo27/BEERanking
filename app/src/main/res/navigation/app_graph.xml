@@ -30,13 +30,19 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.beeranking.features.beer.profile.ProfileFragment"
+        android:name="com.example.beeranking.features.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action
-            android:id="@+id/action_profile_to_feed"
-            app:destination="@id/feedFragment" />
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/auth_graph" >
+            <argument
+                android:name="logout"
+                android:defaultValue="true" />
+        </action>
     </fragment>
+
+
 
     <fragment
         android:id="@+id/myPostsFragment"
@@ -47,5 +53,11 @@
             android:id="@+id/action_myPosts_to_feed"
             app:destination="@id/feedFragment" />
     </fragment>
+
+    <action
+        android:id="@+id/action_global_auth_graph"
+        app:destination="@id/auth_graph"
+        app:popUpTo="@id/app_graph"
+        app:popUpToInclusive="true" />
 
 </navigation>
