@@ -2,20 +2,20 @@ package com.example.beeranking.data.repository.users
 
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.LiveData
+
 import com.example.beeranking.base.StringCompletion
 import com.example.beeranking.base.UserCompletion
 import com.example.beeranking.dao.AppLocalDB
 import com.example.beeranking.dao.AppLocalDbRepository
 import com.example.beeranking.data.models.FirebaseAuthModel
 import com.example.beeranking.data.models.FirebaseModel
-import com.example.beeranking.data.models.StorageModel
+
 import com.example.beeranking.model.User
 import java.util.concurrent.Executors
 
 class UsersRepository private constructor() {
 
-    private val storageModel: StorageModel = StorageModel()
+
     private val firebaseModel = FirebaseModel()
     private val firebaseAuthModel = FirebaseAuthModel()
 
@@ -30,7 +30,7 @@ class UsersRepository private constructor() {
     fun createUser(userName: String, email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.createUser(email, password) createUserLambda@{ authSuccess, authError ->
+                firebaseAuthModel.createUser(email, password, userName) createUserLambda@{ authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during user creation")
@@ -48,7 +48,7 @@ class UsersRepository private constructor() {
 
                     val user = User(
                         id = currentUser.uid,
-                        userName = userName,
+                        userName = currentUser.displayName ?: userName,
                         avatarUrlString = "",
                         email = email,
                         lastUpdated = System.currentTimeMillis()
@@ -72,6 +72,17 @@ class UsersRepository private constructor() {
                     onError(e.message)
                 }
             }
+        }
+    }
+
+    fun getCurrentUser(onSuccess: (User?) -> Unit) {
+        val firebaseUser = firebaseAuthModel.getCurrentUser()
+        if (firebaseUser == null) {
+            onSuccess(null)
+            return
+        }
+        firebaseModel.getUser(firebaseUser.uid) { user, _ ->
+            onSuccess(user)
         }
     }
 
@@ -115,8 +126,25 @@ class UsersRepository private constructor() {
         }
     }
 
+    fun updateUser(user: User, onResult: (Boolean) -> Unit) {
+        firebaseModel.updateUser(user) { success, error ->
+            if (success) {
+                executor.execute {
+                    database.userDao.insertUser(user)
+                    mainHandler.post {
+                        onResult(true)
+                    }
+                }
+            } else {
+                mainHandler.post {
+                    onResult(false)
+                }
+            }
+        }
+    }
+
     fun refreshUsers() {
-        val lastUpdated = User.Companion.lastUpdated
+        val lastUpdated = User.lastUpdated
         firebaseModel.getAllUsers(lastUpdated) { users ->
             executor.execute {
                 var time = lastUpdated
@@ -128,7 +156,7 @@ class UsersRepository private constructor() {
                         }
                     }
                 }
-                User.Companion.lastUpdated = time
+                User.lastUpdated = time
             }
         }
     }

@@ -12,7 +12,7 @@ data class User (
 
     @PrimaryKey
     val id: String,
-    val userName: String,
+    var userName: String,
     val avatarUrlString: String,
     val email: String,
     val lastUpdated: Long?
