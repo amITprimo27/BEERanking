@@ -1,6 +1,7 @@
 package com.example.beeranking.features.beer.feed
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,11 @@ import com.example.beeranking.R
 import com.example.beeranking.databinding.FragmentFeedBinding
 import com.example.beeranking.features.beer.shared.postList.PostAdapter
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.beeranking.features.beer.shared.postList.OnPostClickListener
 import com.example.beeranking.model.PostWithUser
+import com.squareup.picasso.Picasso
 
 class FeedFragment : Fragment() {
     private var binding: FragmentFeedBinding? = null
@@ -24,6 +27,9 @@ class FeedFragment : Fragment() {
     ): View? {
         this.binding = FragmentFeedBinding.inflate(layoutInflater, container, false)
         setupRecyclerView()
+        this.binding?.profileImageHeader?.setOnClickListener {
+            findNavController().navigate(R.id.action_feed_to_profile)
+        }
         return this.binding?.root
     }
 
@@ -57,6 +63,16 @@ class FeedFragment : Fragment() {
             adapter?.posts = it
             adapter?.notifyDataSetChanged()
             binding?.swipeRefresh?.isRefreshing = false
+        }
+
+        viewModel.currentUser.observe(viewLifecycleOwner) {  user ->
+            binding.let {
+                if (user != null && user.avatarUrlString.isNotEmpty()) {
+                    Picasso.get()
+                        .load(user.avatarUrlString)
+                        .into(binding?.profileImageHeader)
+                }
+            }
         }
     }
 
