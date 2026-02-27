@@ -1,11 +1,8 @@
 package com.example.beeranking.data.repository.users
 
-import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.beeranking.base.Completion
 import com.example.beeranking.base.StringCompletion
 import com.example.beeranking.base.UserCompletion
 import com.example.beeranking.dao.AppLocalDB
@@ -25,8 +22,6 @@ class UsersRepository private constructor() {
     private val executor = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler.createAsync(Looper.getMainLooper())
     private val database: AppLocalDbRepository = AppLocalDB.db
-
-    private val users: LiveData<MutableList<User>>? = null
 
     companion object Companion {
         val shared = UsersRepository()
@@ -119,5 +114,22 @@ class UsersRepository private constructor() {
             }
         }
     }
-}
 
+    fun refreshUsers() {
+        val lastUpdated = User.Companion.lastUpdated
+        firebaseModel.getAllUsers(lastUpdated) { users ->
+            executor.execute {
+                var time = lastUpdated
+                for (user in users) {
+                    database.userDao.insertUser(user)
+                    user.lastUpdated?.let { userLastUpdated ->
+                        if (time < userLastUpdated) {
+                            time = userLastUpdated
+                        }
+                    }
+                }
+                User.Companion.lastUpdated = time
+            }
+        }
+    }
+}
