@@ -11,9 +11,11 @@ class ProfileViewModel : ViewModel() {
     val user: LiveData<User?> = _user
 
     fun loadCurrentUser() {
-        UsersRepository.shared.getCurrentUser { user ->
+        UsersRepository.shared.getCurrentUser(onSuccess = { user ->
             _user.postValue(user)
-        }
+        }, onError = {
+            _user.postValue(null)
+        })
     }
 
     fun updateUserName(name: String, onResult: (Boolean) -> Unit) {
