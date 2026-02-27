@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E6E6FF"
-    tools:context=".features.beer.myPosts.MyPostsFragment">
+    android:background="#E6E6FF">
 
-<!-- Header Section -->
+    <!-- Header Section -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_area"
         android:layout_width="match_parent"
@@ -29,6 +28,7 @@
             app:layout_constraintVertical_bias="0.25" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Content Area with Rounded Corners -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_area"
         android:layout_width="match_parent"
@@ -88,6 +88,5 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Content Area with Rounded Corners -->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
