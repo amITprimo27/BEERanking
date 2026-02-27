@@ -3,6 +3,7 @@ package com.example.beeranking.data.repository.users
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.beeranking.base.StringCompletion
 import com.example.beeranking.base.UserCompletion
 import com.example.beeranking.dao.AppLocalDB
@@ -30,20 +31,20 @@ class UsersRepository private constructor() {
     fun createUser(userName: String, email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.createUser(email, password) createUserLambda@{ authSuccess, authError ->
+                firebaseAuthModel.createUser(email, password) { authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during user creation")
                         }
-                        return@createUserLambda
+                        return@createUser
                     }
 
                     val currentUser = firebaseAuthModel.getCurrentUser()
                     if (currentUser == null) {
                         mainHandler.post {
-                            onError(authError ?: "Unknown error during user creation")
+                            onError("User creation failed: No user session")
                         }
-                        return@createUserLambda
+                        return@createUser
                     }
 
                     val user = User(
@@ -54,16 +55,19 @@ class UsersRepository private constructor() {
                         lastUpdated = System.currentTimeMillis()
                     )
 
-                    firebaseModel.createUser(user) createFirebaseLambda@{ firestoreSuccess, firestoreError ->
+                    firebaseModel.createUser(user) { firestoreSuccess, firestoreError ->
                         if (!firestoreSuccess) {
                             mainHandler.post {
                                 onError(firestoreError ?: "Unknown error during Firestore save")
                             }
-                            return@createFirebaseLambda
+                            return@createUser
                         }
 
-                        mainHandler.post {
-                            onSuccess(user)
+                        executor.execute {
+                            database.userDao.insertUser(user)
+                            mainHandler.post {
+                                onSuccess(user)
+                            }
                         }
                     }
                 }
@@ -78,32 +82,35 @@ class UsersRepository private constructor() {
     fun loginUser(email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.signInUser(email, password) signInLambda@{ authSuccess, authError ->
+                firebaseAuthModel.signInUser(email, password) { authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during login")
                         }
-                        return@signInLambda
+                        return@signInUser
                     }
 
                     val currentUser = firebaseAuthModel.getCurrentUser()
                     if (currentUser == null) {
                         mainHandler.post {
-                            onError(authError ?: "Unknown error during login")
+                            onError("Login failed: No user session")
                         }
-                        return@signInLambda
+                        return@signInUser
                     }
 
-                    firebaseModel.getUser(currentUser.uid) getUserLambda@{ user, firestoreError ->
+                    firebaseModel.getUser(currentUser.uid) { user, firestoreError ->
                         if (user == null) {
                             mainHandler.post {
                                 onError(firestoreError ?: "Failed to fetch user data")
                             }
-                            return@getUserLambda
+                            return@getUser
                         }
 
-                        mainHandler.post {
-                            onSuccess(user)
+                        executor.execute {
+                            database.userDao.insertUser(user)
+                            mainHandler.post {
+                                onSuccess(user)
+                            }
                         }
                     }
                 }
@@ -131,5 +138,42 @@ class UsersRepository private constructor() {
                 User.Companion.lastUpdated = time
             }
         }
+    }
+
+    fun getCurrentUser(onSuccess: UserCompletion, onError: StringCompletion) {
+        val firebaseUser = firebaseAuthModel.getCurrentUser()
+        if (firebaseUser == null) {
+            mainHandler.post {
+                onError("No user is currently logged in")
+            }
+            return
+        }
+
+        executor.execute {
+            firebaseModel.getUser(firebaseUser.uid) { remoteUser, error ->
+                if (remoteUser != null) {
+                    executor.execute {
+                        database.userDao.insertUser(remoteUser)
+                        mainHandler.post {
+                            onSuccess(remoteUser)
+                        }
+                    }
+                } else {
+                    mainHandler.post {
+                        onError(error ?: "Failed to fetch current user data")
+                    }
+                }
+            }
+
+        }
+    }
+
+    fun getCurrentUserLiveData(): LiveData<User?> {
+        val firebaseUser = firebaseAuthModel.getCurrentUser()
+        return (if (firebaseUser != null) {
+            database.userDao.getUserByIdLiveData(firebaseUser.uid)
+        } else {
+            MutableLiveData<User?>(null)
+        })
     }
 }

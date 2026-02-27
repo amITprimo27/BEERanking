@@ -33,6 +33,7 @@ class PostRowViewHolder(
         binding.ratingBar.rating = post.rating
         binding.ratingTextView.text = post.rating.toString()
         binding.ratingBar.numStars = post.rating.roundToInt()
+        binding.postDescriptionTextView.text = post.details
 
         if (post.postImageUrlString.isNotEmpty()) {
             Picasso.get()
