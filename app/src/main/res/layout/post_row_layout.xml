@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingTop="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <!-- User Section -->
     <com.google.android.material.imageview.ShapeableImageView
@@ -113,9 +115,31 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-<!--    &lt;!&ndash; Hidden standard IDs for future use if needed by other logic &ndash;&gt;-->
-<!--    <TextView android:id="@+id/beer_name_text_view" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />-->
-<!--    <TextView android:id="@+id/beer_type_text_view" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />-->
-<!--    <TextView android:id="@+id/brewery_text_view" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />-->
+    <!-- Post Description -->
+    <TextView
+        android:id="@+id/post_description_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/post_image_card"
+        tools:text="This is a great beer! Highly recommended for hop lovers. The brewery really nailed the balance here." />
+
+    <!-- Separator Line -->
+    <View
+        android:id="@+id/separator_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="-16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="-16dp"
+        android:background="#CCCCCC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/post_description_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
