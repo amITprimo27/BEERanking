@@ -142,7 +142,7 @@ class UsersRepository private constructor() {
 
     fun updateUser(user: User, onResult: (Boolean) -> Unit) {
         executor.execute {
-            firebaseModel.createUser(user) { success, error ->
+            firebaseModel.updateUser(user) { success, error ->
                 if (success) {
                     executor.execute {
                         database.userDao.insertUser(user)
