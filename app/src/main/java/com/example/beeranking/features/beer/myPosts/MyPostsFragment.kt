@@ -1,20 +1,14 @@
 package com.example.beeranking.features.beer.myPosts
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.beeranking.databinding.FragmentMyPostsBinding
+import androidx.fragment.app.viewModels
+import com.example.beeranking.features.beer.shared.postList.BasePostListFragment
+import com.example.beeranking.features.beer.shared.postList.BasePostListViewModel
+import com.example.beeranking.model.PostWithUser
 
-class MyPostsFragment : Fragment() {
-    private var binding: FragmentMyPostsBinding? = null
+class MyPostsFragment : BasePostListFragment() {
+    override val viewModel: BasePostListViewModel by viewModels<MyPostsViewModel>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMyPostsBinding.inflate(inflater, container, false)
-        return binding?.root
+    override fun handlePostClick(postWithUser: PostWithUser) {
+        //TODO: Handle go to edit post
     }
 }

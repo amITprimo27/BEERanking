@@ -9,43 +9,36 @@
         android:id="@+id/feedFragment"
         android:name="com.example.beeranking.features.beer.feed.FeedFragment"
         android:label="Feed"
-        tools:layout="@layout/fragment_feed">
-        <action
-            android:id="@+id/action_feed_to_addpost"
-            app:destination="@id/addPostFragment" />
-        <action
-            android:id="@+id/action_feed_to_profile"
-            app:destination="@id/profileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_post_list_base"/>
 
     <fragment
         android:id="@+id/addPostFragment"
         android:name="com.example.beeranking.features.beer.addPost.AddPostFragment"
         android:label="Add Post"
-        tools:layout="@layout/fragment_add_post">
-        <action
-            android:id="@+id/action_addpost_to_feed"
-            app:destination="@id/feedFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_add_post"/>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.beeranking.features.beer.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile">
-        <action
-            android:id="@+id/action_profile_to_feed"
-            app:destination="@id/feedFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/myPostsFragment"
         android:name="com.example.beeranking.features.beer.myPosts.MyPostsFragment"
         android:label="My Posts"
-        tools:layout="@layout/fragment_my_posts">
-        <action
-            android:id="@+id/action_myPosts_to_feed"
-            app:destination="@id/feedFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_post_list_base"/>
+    <action
+        android:id="@+id/action_global_addPostFragment"
+        app:destination="@id/addPostFragment" />
+    <action
+        android:id="@+id/action_global_feedFragment"
+        app:destination="@id/feedFragment" />
+    <action
+        android:id="@+id/action_global_myPostsFragment"
+        app:destination="@id/myPostsFragment" />
+    <action
+        android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment" />
 
 </navigation>
