@@ -1,9 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.kapt)
+}
+
+// Function to safely read properties from local.properties
+fun getApiKey(property: String): String {
+    val properties = Properties()
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use {
+        properties.load(it)
+    }
+    return properties.getProperty(property) ?: ""
 }
 
 android {
@@ -20,6 +31,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BEER_API_KEY", "\"${getApiKey("beer.api.key")}\"")
     }
 
     buildTypes {
@@ -34,6 +46,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -68,6 +81,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.circleimageview)
+
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

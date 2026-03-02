@@ -6,7 +6,7 @@
         android:title="Feed" />
     <item
         android:id="@+id/addPostFragment"
-        android:icon="@drawable/ic_add_post"
+        android:icon="@drawable/ic_add"
         android:title="Add Post" />
     <item
         android:id="@+id/myPostsFragment"

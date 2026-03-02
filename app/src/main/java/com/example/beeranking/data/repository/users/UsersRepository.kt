@@ -42,14 +42,14 @@ class UsersRepository private constructor() {
                     val currentUser = firebaseAuthModel.getCurrentUser()
                     if (currentUser == null) {
                         mainHandler.post {
-                            onError("User creation failed: No user session")
+                            onError(authError ?: "Unknown error during user creation")
                         }
                         return@createUser
                     }
 
                     val user = User(
                         id = currentUser.uid,
-                        userName = userName,
+                        userName = currentUser.displayName ?: userName,
                         avatarUrlString = "",
                         email = email,
                         lastUpdated = System.currentTimeMillis()
@@ -93,7 +93,7 @@ class UsersRepository private constructor() {
                     val currentUser = firebaseAuthModel.getCurrentUser()
                     if (currentUser == null) {
                         mainHandler.post {
-                            onError("Login failed: No user session")
+                            onError(authError ?: "Unknown error during login")
                         }
                         return@signInUser
                     }
@@ -136,6 +136,25 @@ class UsersRepository private constructor() {
                     }
                 }
                 User.Companion.lastUpdated = time
+            }
+        }
+    }
+
+    fun updateUser(user: User, onResult: (Boolean) -> Unit) {
+        executor.execute {
+            firebaseModel.updateUser(user) { success, error ->
+                if (success) {
+                    executor.execute {
+                        database.userDao.insertUser(user)
+                        mainHandler.post {
+                            onResult(true)
+                        }
+                    }
+                } else {
+                    mainHandler.post {
+                        onResult(false)
+                    }
+                }
             }
         }
     }

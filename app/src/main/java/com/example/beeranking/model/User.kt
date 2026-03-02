@@ -12,10 +12,11 @@ data class User (
 
     @PrimaryKey
     val id: String,
-    val userName: String,
+    var userName: String,
     val avatarUrlString: String,
     val email: String,
-    val lastUpdated: Long?
+    val lastUpdated: Long?,
+    val favoriteBeers: List<String> = emptyList()
 
 )
 {
@@ -40,6 +41,7 @@ companion object {
     const val AVATAR_URL_STRING_KEY = "avatarUrlString"
     const val EMAIL_KEY = "email"
     const val LAST_UPDATED_KEY = "lastUpdated"
+    const val FAVORITE_BEERS_KEY = "favoriteBeers"
 
     fun fromJson(json: Map<String, Any?>): User {
         val id = json[ID_KEY] as String
@@ -48,13 +50,15 @@ companion object {
         val email = json[EMAIL_KEY] as String
         val timestamp = json[LAST_UPDATED_KEY] as? Timestamp
         val lastUpdatedLong = timestamp?.toDate()?.time
+        val favoriteBeers = json[FAVORITE_BEERS_KEY] as? List<String> ?: emptyList()
 
         return User(
             id = id,
             userName = userName,
             avatarUrlString = avatarUrlString,
             email = email,
-            lastUpdated = lastUpdatedLong
+            lastUpdated = lastUpdatedLong,
+            favoriteBeers = favoriteBeers
         )
     }
 }
@@ -65,6 +69,7 @@ val toJson: Map<String, Any?>
         NAME_KEY to this.userName,
         AVATAR_URL_STRING_KEY to this.avatarUrlString,
         EMAIL_KEY to this.email,
-        LAST_UPDATED_KEY to FieldValue.serverTimestamp()
+        LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
+        FAVORITE_BEERS_KEY to this.favoriteBeers
     )
 }

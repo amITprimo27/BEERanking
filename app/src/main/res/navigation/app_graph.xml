@@ -23,6 +23,8 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile"/>
 
+
+
     <fragment
         android:id="@+id/myPostsFragment"
         android:name="com.example.beeranking.features.beer.myPosts.MyPostsFragment"
@@ -40,5 +42,11 @@
     <action
         android:id="@+id/action_global_profileFragment"
         app:destination="@id/profileFragment" />
+
+    <action
+        android:id="@+id/action_global_auth_graph"
+        app:destination="@id/auth_graph"
+        app:popUpTo="@id/app_graph"
+        app:popUpToInclusive="true" />
 
 </navigation>

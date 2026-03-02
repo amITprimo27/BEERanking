@@ -93,4 +93,17 @@ class FirebaseModel {
                 }
             }
     }
+
+    fun updateUser(user: User, completion: FirestoreCompletion) {
+        db.collection(USERS)
+            .document(user.id)
+            .update(user.toJson)
+            .addOnSuccessListener {
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
 }
+
