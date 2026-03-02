@@ -31,7 +31,7 @@ class UsersRepository private constructor() {
     fun createUser(userName: String, email: String, password: String, onSuccess: UserCompletion, onError: StringCompletion) {
         executor.execute {
             try {
-                firebaseAuthModel.createUser(email, password, userName) { authSuccess, authError ->
+                firebaseAuthModel.createUser(email, password) { authSuccess, authError ->
                     if (!authSuccess) {
                         mainHandler.post {
                             onError(authError ?: "Unknown error during user creation")

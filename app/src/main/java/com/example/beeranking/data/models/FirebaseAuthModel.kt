@@ -15,27 +15,10 @@ class FirebaseAuthModel {
         auth.signOut()
     }
 
-    fun createUser(email: String, password: String, displayName: String, completion: FirebaseAuthCompletion) {
+    fun createUser(email: String, password: String, completion: FirebaseAuthCompletion) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                val user = auth.currentUser
-                if (user == null) {
-                    completion(false, "Failed to create user.")
-                    return@addOnSuccessListener
-                }
-
-                val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName(displayName)
-                    .build()
-
-                user.updateProfile(profileUpdates)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            completion(true, null)
-                        } else {
-                            completion(false, task.exception?.message)
-                        }
-                    }
+            .addOnSuccessListener { result ->
+                completion(true, null)
             }
             .addOnFailureListener { exception ->
                 completion(false, exception.message)
