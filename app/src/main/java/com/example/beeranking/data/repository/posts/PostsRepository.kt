@@ -1,5 +1,6 @@
 package com.example.beeranking.data.repository.posts
 
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -62,6 +63,26 @@ class PostsRepository private constructor() {
 
     fun updatePost(
         post: Post,
+        imageUri: Uri? = null,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        if (imageUri != null) {
+            storageModel.uploadPostImage(imageUri, post.id) { imageUrl ->
+                if (imageUrl != null) {
+                    val updatedPostWithImage = post.copy(postImageUrlString = imageUrl)
+                    performUpdate(updatedPostWithImage, onSuccess, onError)
+                } else {
+                    mainHandler.post { onError("Failed to upload image") }
+                }
+            }
+        } else {
+            performUpdate(post, onSuccess, onError)
+        }
+    }
+
+    private fun performUpdate(
+        post: Post,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
@@ -81,7 +102,5 @@ class PostsRepository private constructor() {
                 }
             }
         }
-
-
     }
 }

@@ -25,4 +25,17 @@ class FirebaseStorageModel {
                 completion(null)
             }
     }
+
+    fun uploadPostImage(imageUri: Uri, postId: String, completion: (String?) -> Unit) {
+        val ref = storage.reference.child("post_images/$postId")
+        ref.putFile(imageUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    completion(uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                completion(null)
+            }
+    }
 }

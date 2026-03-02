@@ -29,7 +29,7 @@ class PostRowViewHolder(
         val user = postWithUser.user
 
         binding.userNameTextView.text = user?.userName ?: "Unknown User"
-        binding.beerInfoTextView.text = "${post.beerBrewery} By ${post.beerName}"
+        binding.beerInfoTextView.text = "${post.beerName} By ${post.beerBrewery}"
         binding.ratingBar.rating = post.rating
         binding.ratingTextView.text = post.rating.toString()
         binding.postDescriptionTextView.text = post.details
