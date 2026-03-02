@@ -38,7 +38,7 @@ class PostsRepository private constructor() {
     }
 
     fun refreshPosts() {
-        val lastUpdated = Post.Companion.lastUpdated
+        val lastUpdated = Post.lastUpdated
 
         // First, refresh users to ensure we have the latest profiles
         UsersRepository.shared.refreshUsers()
@@ -55,8 +55,33 @@ class PostsRepository private constructor() {
                         }
                     }
                 }
-                Post.Companion.lastUpdated = time
+                Post.lastUpdated = time
             }
         }
+    }
+
+    fun updatePost(
+        post: Post,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val updatedPost = post.copy(lastUpdated = System.currentTimeMillis())
+
+        executor.execute {
+            firebaseModel.updatePost(updatedPost) { success, error ->
+                mainHandler.post {
+                    if (success) {
+                        executor.execute {
+                            database.postDao.insertPost(updatedPost)
+                        }
+                        onSuccess()
+                    } else {
+                        onError(error ?: "Unknown error")
+                    }
+                }
+            }
+        }
+
+
     }
 }

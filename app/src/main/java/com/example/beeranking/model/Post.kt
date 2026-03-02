@@ -1,12 +1,14 @@
 package com.example.beeranking.model
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.beeranking.base.MyApplication
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
-
+@Parcelize
 @Entity()
 data class Post (
 
@@ -21,7 +23,7 @@ data class Post (
     val beerType: String,
     val beerAlcoholPercentage: Float,
     val beerBrewery: String,
-)
+): Parcelable
 {
     companion object {
 

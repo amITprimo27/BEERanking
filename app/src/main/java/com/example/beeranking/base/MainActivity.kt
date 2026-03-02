@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.beeranking.R
@@ -20,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding?.root)
 
         val navHostFragment = supportFragmentManager
@@ -30,8 +27,15 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val isBeerDestination = destination.parent?.id == R.id.app_graph
-            bottomNav.visibility = if (isBeerDestination) View.VISIBLE else View.GONE
+            when (destination.id) {
+                R.id.editPostFragment -> {
+                    bottomNav.visibility = View.GONE
+                }
+                else -> {
+                    val isBeerDestination = destination.parent?.id == R.id.app_graph
+                    bottomNav.visibility = if (isBeerDestination) View.VISIBLE else View.GONE
+                }
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.kapt)
+    id("kotlin-parcelize")
 }
 
 // Function to safely read properties from local.properties
