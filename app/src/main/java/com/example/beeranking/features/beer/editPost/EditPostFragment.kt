@@ -22,6 +22,7 @@ import com.example.beeranking.features.beer.search.BeerSearchDialogFragment
 import com.example.beeranking.features.beer.search.BeerSearchViewModel
 import com.example.beeranking.model.Beer
 import com.example.beeranking.model.Post
+import com.example.beeranking.utilis.loader.LoadingIndicator
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.util.Locale
@@ -31,6 +32,7 @@ class EditPostFragment : Fragment() {
     private val viewModel: EditPostViewModel by viewModels()
     private val searchViewModel: BeerSearchViewModel by activityViewModels()
     private val args: EditPostFragmentArgs by navArgs()
+    private val loader: LoadingIndicator by lazy { LoadingIndicator(requireContext()) }
 
     private var latestTmpUri: Uri? = null
     private var imageToUploadUri: Uri? = null
@@ -196,9 +198,9 @@ class EditPostFragment : Fragment() {
                 details = details
             )
 
-            imageUploadProgressBar.visibility = View.VISIBLE
+            loader.show()
             viewModel.updatePost(updatedPost, imageToUploadUri) { success, error ->
-                imageUploadProgressBar.visibility = View.GONE
+                loader.hide()
                 if (success) {
                     Toast.makeText(requireContext(), "Post updated successfully", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
