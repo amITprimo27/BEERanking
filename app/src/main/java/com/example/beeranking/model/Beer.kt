@@ -16,5 +16,5 @@ data class Beer(
     val brewerVerified: Boolean,
     @SerializedName("last_modified")
     val lastModified: Long,
-    val brewer: Brewer
+    val brewer: Brewer?
 )

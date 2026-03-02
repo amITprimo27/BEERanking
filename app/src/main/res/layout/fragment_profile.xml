@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E6E6FF"
-    tools:context=".features.profile.ProfileFragment">
+    tools:context=".features.beer.profile.ProfileFragment">
 
+    <!-- Top Bar Buttons -->
     <ImageButton
         android:id="@+id/logout_button"
         android:layout_width="48dp"
@@ -33,6 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Header background -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_area"
         android:layout_width="match_parent"
@@ -40,10 +42,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <!-- Main Content Area -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_area"
         android:layout_width="match_parent"
@@ -54,6 +55,7 @@
         app:layout_constraintHeight_percent="0.9"
         app:layout_constraintStart_toStartOf="parent">
 
+        <!-- Profile Image and Camera Button -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="120dp"
@@ -73,45 +75,96 @@
             android:layout_height="48dp"
             android:src="@android:drawable/ic_menu_camera"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintStart_toEndOf="@id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/profile_image" />
+            app:layout_constraintTop_toTopOf="@id/profile_image" />
 
-        <TextView
-            android:id="@+id/username_text"
+        <!-- Username Container -->
+        <FrameLayout
+            android:id="@+id/username_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="BeerLover21"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/username_edit_text"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/username_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BeerLover21"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/username_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter new username"
+                android:minWidth="200dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- Favorite Beers Header -->
+        <TextView
+            android:id="@+id/favorite_beers_header"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Enter new username"
+            android:layout_marginTop="24dp"
+            android:text="Favorite Beers"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/username_container"/>
+
+        <!-- Favorite Beers Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/favorite_beers_loader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/favorite_beers_recycler_view"
+            app:layout_constraintBottom_toBottomOf="@+id/favorite_beers_recycler_view"
+            app:layout_constraintStart_toStartOf="@+id/favorite_beers_recycler_view"
+            app:layout_constraintEnd_toEndOf="@+id/favorite_beers_recycler_view"/>
+
+        <!-- Favorite Beers List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favorite_beers_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/add_favorite_beer_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image"
-            app:layout_constraintWidth_percent="0.6" />
+            app:layout_constraintTop_toBottomOf="@+id/favorite_beers_header" />
+
+        <!-- Edit Mode Buttons -->
+        <Button
+            android:id="@+id/add_favorite_beer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Add Favorite Beer"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:text="Save"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username_edit_text" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

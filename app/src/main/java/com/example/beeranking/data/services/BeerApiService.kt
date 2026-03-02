@@ -1,8 +1,10 @@
 package com.example.beeranking.data.services
 
+import com.example.beeranking.model.Beer
 import com.example.beeranking.model.BeerResponse
 import com.example.beeranking.model.BeerSearchResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface BeerApiService {
@@ -11,4 +13,7 @@ interface BeerApiService {
 
     @GET("beer/search")
     suspend fun searchBeers(@Query("q") query: String): BeerSearchResponse
+
+    @GET("beer/{id}")
+    suspend fun getBeerById(@Path("id") beerId: String): Beer
 }

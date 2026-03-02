@@ -15,6 +15,10 @@ class BeerRepository private constructor() {
         return beerApiService.searchBeers(query).data
     }
 
+    suspend fun getBeerById(beerId: String): Beer {
+        return beerApiService.getBeerById(beerId)
+    }
+
     companion object {
         val shared = BeerRepository()
     }
