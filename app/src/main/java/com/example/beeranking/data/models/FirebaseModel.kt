@@ -105,5 +105,17 @@ class FirebaseModel {
                 completion(false, exception.message)
             }
     }
+
+    fun updatePost(post: Post, completion: FirestoreCompletion) {
+        db.collection(POSTS)
+            .document(post.id)
+            .set(post.toJson)
+            .addOnSuccessListener {
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
 }
 

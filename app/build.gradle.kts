@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.kapt)
+    id("kotlin-parcelize")
 }
 
 // Function to safely read properties from local.properties
@@ -90,6 +91,8 @@ dependencies {
     implementation(libs.picasso)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    
+    implementation(libs.android.image.cropper)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

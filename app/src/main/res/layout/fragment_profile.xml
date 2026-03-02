@@ -73,11 +73,11 @@
             android:id="@+id/camera_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@android:drawable/ic_menu_camera"
+            android:src="@drawable/ic_camera"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/profile_image"
-            app:layout_constraintStart_toEndOf="@id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/profile_image"
             app:layout_constraintTop_toTopOf="@id/profile_image" />
 
         <!-- Username Container -->

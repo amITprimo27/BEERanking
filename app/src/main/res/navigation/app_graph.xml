@@ -29,7 +29,21 @@
         android:id="@+id/myPostsFragment"
         android:name="com.example.beeranking.features.beer.myPosts.MyPostsFragment"
         android:label="My Posts"
-        tools:layout="@layout/fragment_post_list_base"/>
+        tools:layout="@layout/fragment_post_list_base" >
+        <action
+            android:id="@+id/action_myPostsFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.example.beeranking.features.beer.editPost.EditPostFragment"
+        android:label="Edit Post"
+        tools:layout="@layout/fragment_edit_post">
+        <argument
+            android:name="post"
+            app:argType="com.example.beeranking.model.Post" />
+    </fragment>
     <action
         android:id="@+id/action_global_addPostFragment"
         app:destination="@id/addPostFragment" />

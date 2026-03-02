@@ -9,4 +9,8 @@ class StorageModel {
     fun uploadProfileImage(imageUri: Uri, userId: String, completion: (String?) -> Unit) {
         firebaseStorage.uploadProfileImage(imageUri, userId, completion)
     }
+
+    fun uploadPostImage(imageUri: Uri, postId: String, completion: (String?) -> Unit) {
+        firebaseStorage.uploadPostImage(imageUri, postId, completion)
+    }
 }

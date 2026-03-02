@@ -24,8 +24,7 @@ googleServices = "4.4.2"
 firebaseBom = "34.7.0"
 swiperefreshlayout = "1.2.0"
 circleimageview = "3.1.0"
-
-
+imageCropper = "4.3.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +70,7 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+android-image-cropper = { group = "com.github.CanHub", name = "Android-Image-Cropper", version.ref = "imageCropper" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

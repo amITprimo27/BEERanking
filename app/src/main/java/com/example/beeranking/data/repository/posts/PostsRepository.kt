@@ -1,5 +1,6 @@
 package com.example.beeranking.data.repository.posts
 
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -38,7 +39,7 @@ class PostsRepository private constructor() {
     }
 
     fun refreshPosts() {
-        val lastUpdated = Post.Companion.lastUpdated
+        val lastUpdated = Post.lastUpdated
 
         // First, refresh users to ensure we have the latest profiles
         UsersRepository.shared.refreshUsers()
@@ -55,7 +56,50 @@ class PostsRepository private constructor() {
                         }
                     }
                 }
-                Post.Companion.lastUpdated = time
+                Post.lastUpdated = time
+            }
+        }
+    }
+
+    fun updatePost(
+        post: Post,
+        imageUri: Uri? = null,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        if (imageUri != null) {
+            storageModel.uploadPostImage(imageUri, post.id) { imageUrl ->
+                if (imageUrl != null) {
+                    val updatedPostWithImage = post.copy(postImageUrlString = imageUrl)
+                    performUpdate(updatedPostWithImage, onSuccess, onError)
+                } else {
+                    mainHandler.post { onError("Failed to upload image") }
+                }
+            }
+        } else {
+            performUpdate(post, onSuccess, onError)
+        }
+    }
+
+    private fun performUpdate(
+        post: Post,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val updatedPost = post.copy(lastUpdated = System.currentTimeMillis())
+
+        executor.execute {
+            firebaseModel.updatePost(updatedPost) { success, error ->
+                mainHandler.post {
+                    if (success) {
+                        executor.execute {
+                            database.postDao.insertPost(updatedPost)
+                        }
+                        onSuccess()
+                    } else {
+                        onError(error ?: "Unknown error")
+                    }
+                }
             }
         }
     }
