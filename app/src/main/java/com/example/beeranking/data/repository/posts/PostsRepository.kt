@@ -3,6 +3,7 @@ package com.example.beeranking.data.repository.posts
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.beeranking.dao.AppLocalDB
 import com.example.beeranking.dao.AppLocalDbRepository
@@ -11,7 +12,9 @@ import com.example.beeranking.data.models.StorageModel
 import com.example.beeranking.data.repository.users.UsersRepository
 import com.example.beeranking.model.Post
 import com.example.beeranking.model.PostWithUser
+import com.google.firebase.firestore.FieldValue
 import java.util.concurrent.Executors
+import kotlin.math.log
 
 class PostsRepository private constructor() {
 
@@ -86,14 +89,12 @@ class PostsRepository private constructor() {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val updatedPost = post.copy(lastUpdated = System.currentTimeMillis())
-
         executor.execute {
-            firebaseModel.updatePost(updatedPost) { success, error ->
+            firebaseModel.updatePost(post) { success, error ->
                 mainHandler.post {
                     if (success) {
                         executor.execute {
-                            database.postDao.insertPost(updatedPost)
+                            database.postDao.insertPost(post)
                         }
                         onSuccess()
                     } else {

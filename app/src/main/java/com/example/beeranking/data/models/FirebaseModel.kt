@@ -1,7 +1,5 @@
 package com.example.beeranking.data.models
 
-import android.util.Log
-import com.example.beeranking.base.PostCompletion
 import com.example.beeranking.base.PostsCompletion
 import com.example.beeranking.model.Post
 import com.example.beeranking.model.User
@@ -109,7 +107,7 @@ class FirebaseModel {
     fun updatePost(post: Post, completion: FirestoreCompletion) {
         db.collection(POSTS)
             .document(post.id)
-            .set(post.toJson)
+            .update(post.toJson)
             .addOnSuccessListener {
                 completion(true, null)
             }

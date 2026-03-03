@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.beeranking.base.MyApplication
+import com.google.firebase.firestore.FieldValue
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 @Parcelize
@@ -86,7 +87,7 @@ data class Post (
             POSTED_BY_KEY to this.postedBy,
             POST_IMAGE_URL_STRING_KEY to this.postImageUrlString,
             RATING_KEY to this.rating,
-            LAST_UPDATED_KEY to this.lastUpdated,
+            LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
             DETAILS_KEY to this.details,
             BEER_NAME_KEY to this.beerName,
             BEER_TYPE_KEY to this.beerType,
