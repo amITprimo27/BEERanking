@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.editPostFragment -> {
+                R.id.editPostFragment, R.id.addPostFragment -> {
                     bottomNav.visibility = View.GONE
                 }
                 else -> {
