@@ -69,9 +69,18 @@ class EditPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val post = args.post
-        viewModel.postToEdit.value = post
-        setupUI(post)
+        
+        loader.show()
+        viewModel.loadPost(args.postId) { success, error ->
+            loader.hide()
+            if (success) {
+                viewModel.postToEdit.value?.let { setupUI(it) }
+            } else {
+                Toast.makeText(requireContext(), error ?: "Failed to load post", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
+        }
+        
         setupObservers()
         setupListeners()
     }

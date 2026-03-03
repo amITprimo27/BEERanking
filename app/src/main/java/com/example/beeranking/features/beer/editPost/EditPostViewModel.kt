@@ -1,7 +1,6 @@
 package com.example.beeranking.features.beer.editPost
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.beeranking.data.repository.posts.PostsRepository
@@ -12,6 +11,17 @@ class EditPostViewModel : ViewModel() {
     val postToEdit = MutableLiveData<Post?>()
 
     private val postsRepository = PostsRepository.shared
+
+    fun loadPost(postId: String, completion: (Boolean, String?) -> Unit) {
+        postsRepository.getPost(postId) { post, error ->
+            if (post != null) {
+                postToEdit.value = post
+                completion(true, null)
+            } else {
+                completion(false, error ?: "Post not found")
+            }
+        }
+    }
 
     fun onBeerSelected(beer: Beer) {
         val currentPost = postToEdit.value ?: return

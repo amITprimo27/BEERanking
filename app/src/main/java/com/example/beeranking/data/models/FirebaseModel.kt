@@ -5,11 +5,13 @@ import com.example.beeranking.model.Post
 import com.example.beeranking.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 
 typealias FirestoreCompletion = (success: Boolean, error: String?) -> Unit
 typealias FirestoreUserCompletion = (user: User?, error: String?) -> Unit
 typealias FirestoreUsersCompletion = (users: List<User>) -> Unit
+typealias FirestorePostCompletion = (post: Post?, error: String?) -> Unit
 
 class FirebaseModel {
     private val db = Firebase.firestore
@@ -56,6 +58,31 @@ class FirebaseModel {
             }
     }
 
+    fun getPost(postId: String, completion: FirestorePostCompletion) {
+        db.collection(POSTS)
+            .document(postId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists() && !document.data.isNullOrEmpty()) {
+                    try {
+                        val post = document.data?.let {
+                            val data = it.toMutableMap()
+                            data[Post.ID_KEY] = document.id
+                            Post.fromJson(data)
+                        }
+                        completion(post, null)
+                    } catch (e: Exception) {
+                        completion(null, e.message)
+                    }
+                } else {
+                    completion(null, "Post not found")
+                }
+            }
+            .addOnFailureListener { exception ->
+                completion(null, exception.message)
+            }
+    }
+
     fun getAllUsers(since: Long, completion: FirestoreUsersCompletion) {
         db.collection(USERS)
             .whereGreaterThanOrEqualTo(User.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
@@ -78,7 +105,6 @@ class FirebaseModel {
         var query = db.collection(POSTS)
             .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
 
-        // If it's a fresh fetch (since == 0), don't download already deleted posts
         if (since == 0L) {
             query = query.whereEqualTo(Post.IS_DELETED_KEY, false)
         }
@@ -114,6 +140,21 @@ class FirebaseModel {
         db.collection(POSTS)
             .document(post.id)
             .update(post.toJson)
+            .addOnSuccessListener {
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
+
+    fun deletePost(postId: String, completion: FirestoreCompletion) {
+        db.collection(POSTS)
+            .document(postId)
+            .update(
+                Post.IS_DELETED_KEY, true,
+                Post.LAST_UPDATED_KEY, FieldValue.serverTimestamp()
+            )
             .addOnSuccessListener {
                 completion(true, null)
             }

@@ -41,6 +41,24 @@ class PostsRepository private constructor() {
         return database.postDao.getPostsByUserWithUser(userId)
     }
 
+    fun getPost(postId: String, completion: (Post?, String?) -> Unit) {
+        firebaseModel.getPost(postId) { post, error ->
+            if (post != null) {
+                executor.execute {
+                    if (post.isDeleted) {
+                        database.postDao.deletePost(post)
+                        mainHandler.post { completion(null, "Post was deleted") }
+                    } else {
+                        database.postDao.insertPost(post)
+                        mainHandler.post { completion(post, null) }
+                    }
+                }
+            } else {
+                mainHandler.post { completion(null, error) }
+            }
+        }
+    }
+
     fun refreshPosts() {
         val lastUpdated = Post.lastUpdated
 
@@ -110,9 +128,8 @@ class PostsRepository private constructor() {
     }
 
     fun deletePost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
-        val deletedPost = post.copy(isDeleted = true)
         executor.execute {
-            firebaseModel.updatePost(deletedPost) { success, error ->
+            firebaseModel.deletePost(post.id) { success, error ->
                 mainHandler.post {
                     if (success) {
                         executor.execute {
