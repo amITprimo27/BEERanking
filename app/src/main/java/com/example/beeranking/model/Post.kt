@@ -6,15 +6,16 @@ import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.beeranking.base.MyApplication
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
+
 @Parcelize
 @Entity()
 data class Post (
-
     @PrimaryKey
-    val id: String =  UUID.randomUUID().toString(),
+    val id: String = UUID.randomUUID().toString(),
     val postedBy: String,
     val postImageUrlString: String,
     val rating: Float,
@@ -24,10 +25,9 @@ data class Post (
     val beerType: String,
     val beerAlcoholPercentage: Float,
     val beerBrewery: String,
-): Parcelable
-{
+    val isDeleted: Boolean = false
+): Parcelable {
     companion object {
-
         var lastUpdated: Long
             get() {
                 return MyApplication.Globals.appContext
@@ -52,19 +52,26 @@ data class Post (
         const val BEER_TYPE_KEY = "beerType"
         const val BEER_ALCOHOL_PERCENTAGE_KEY = "beerAlcoholPercentage"
         const val BEER_BREWERY_KEY = "beerBrewery"
+        const val IS_DELETED_KEY = "isDeleted"
 
         fun fromJson(json: Map<String, Any?>): Post {
-            Log.i("TAG", json.toString())
             val id = json[ID_KEY] as String
             val postedBy = json[POSTED_BY_KEY] as String
             val postImageUrlString = json[POST_IMAGE_URL_STRING_KEY] as String
             val rating = (json[RATING_KEY] as? Number)?.toFloat() ?: 0f
-            val lastUpdated = json[LAST_UPDATED_KEY] as? Long
+            
+            val lastUpdated = when (val value = json[LAST_UPDATED_KEY]) {
+                is Timestamp -> value.seconds
+                is Long -> value
+                else -> null
+            }
+            
             val details = json[DETAILS_KEY] as String
             val beerName = json[BEER_NAME_KEY] as String
             val beerType = json[BEER_TYPE_KEY] as String
             val beerAlcoholPercentage = (json[BEER_ALCOHOL_PERCENTAGE_KEY] as? Number)?.toFloat() ?: 0f
             val beerBrewery = json[BEER_BREWERY_KEY] as String
+            val isDeleted = json[IS_DELETED_KEY] as? Boolean ?: false
 
             return Post(
                 id = id,
@@ -76,7 +83,8 @@ data class Post (
                 beerName = beerName,
                 beerType = beerType,
                 beerAlcoholPercentage = beerAlcoholPercentage,
-                beerBrewery = beerBrewery
+                beerBrewery = beerBrewery,
+                isDeleted = isDeleted
             )
         }
     }
@@ -92,6 +100,7 @@ data class Post (
             BEER_NAME_KEY to this.beerName,
             BEER_TYPE_KEY to this.beerType,
             BEER_ALCOHOL_PERCENTAGE_KEY to this.beerAlcoholPercentage,
-            BEER_BREWERY_KEY to this.beerBrewery
+            BEER_BREWERY_KEY to this.beerBrewery,
+            IS_DELETED_KEY to this.isDeleted
         )
 }

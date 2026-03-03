@@ -75,9 +75,15 @@ class FirebaseModel {
     }
 
     fun getAllPosts(since: Long, completion: PostsCompletion) {
-        db.collection(POSTS)
+        var query = db.collection(POSTS)
             .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
-            .get()
+
+        // If it's a fresh fetch (since == 0), don't download already deleted posts
+        if (since == 0L) {
+            query = query.whereEqualTo(Post.IS_DELETED_KEY, false)
+        }
+
+        query.get()
             .addOnCompleteListener { result ->
                 if (result.isSuccessful) {
                     val posts = result.result.map { document ->
@@ -108,18 +114,6 @@ class FirebaseModel {
         db.collection(POSTS)
             .document(post.id)
             .update(post.toJson)
-            .addOnSuccessListener {
-                completion(true, null)
-            }
-            .addOnFailureListener { exception ->
-                completion(false, exception.message)
-            }
-    }
-
-    fun deletePost(postId: String, completion: FirestoreCompletion) {
-        db.collection(POSTS)
-            .document(postId)
-            .delete()
             .addOnSuccessListener {
                 completion(true, null)
             }

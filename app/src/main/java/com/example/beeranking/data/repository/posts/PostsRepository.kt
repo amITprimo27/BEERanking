@@ -51,7 +51,11 @@ class PostsRepository private constructor() {
             executor.execute {
                 var time = lastUpdated
                 for (post in posts) {
-                    database.postDao.insertPost(post)
+                    if (post.isDeleted) {
+                        database.postDao.deletePost(post)
+                    } else {
+                        database.postDao.insertPost(post)
+                    }
                     
                     post.lastUpdated?.let { postLastUpdated ->
                         if (time < postLastUpdated) {
@@ -106,8 +110,9 @@ class PostsRepository private constructor() {
     }
 
     fun deletePost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        val deletedPost = post.copy(isDeleted = true)
         executor.execute {
-            firebaseModel.deletePost(post.id) { success, error ->
+            firebaseModel.updatePost(deletedPost) { success, error ->
                 mainHandler.post {
                     if (success) {
                         executor.execute {
