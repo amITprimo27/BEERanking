@@ -21,6 +21,18 @@ class FirebaseModel {
         const val POSTS = "posts"
     }
 
+    fun addPost(post: Post, completion: FirestoreCompletion) {
+        db.collection(POSTS)
+            .document(post.id)
+            .set(post.toJson)
+            .addOnSuccessListener {
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
+
     fun createUser(user: User, completion: FirestoreCompletion) {
         db.collection(USERS)
             .document(user.id)

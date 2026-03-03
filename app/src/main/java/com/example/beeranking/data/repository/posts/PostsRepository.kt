@@ -86,6 +86,47 @@ class PostsRepository private constructor() {
         }
     }
 
+    fun addPost(
+        post: Post,
+        imageUri: Uri? = null,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        if (imageUri != null) {
+            storageModel.uploadPostImage(imageUri, post.id) { imageUrl ->
+                if (imageUrl != null) {
+                    val postWithImage = post.copy(postImageUrlString = imageUrl)
+                    performAdd(postWithImage, onSuccess, onError)
+                } else {
+                    mainHandler.post { onError("Failed to upload image") }
+                }
+            }
+        } else {
+            performAdd(post, onSuccess, onError)
+        }
+    }
+
+    private fun performAdd(
+        post: Post,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        executor.execute {
+            firebaseModel.addPost(post) { success, error ->
+                mainHandler.post {
+                    if (success) {
+                        executor.execute {
+                            database.postDao.insertPost(post)
+                        }
+                        onSuccess()
+                    } else {
+                        onError(error ?: "Unknown error")
+                    }
+                }
+            }
+        }
+    }
+
     fun updatePost(
         post: Post,
         imageUri: Uri? = null,
