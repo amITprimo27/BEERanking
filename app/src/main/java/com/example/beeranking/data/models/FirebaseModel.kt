@@ -115,5 +115,16 @@ class FirebaseModel {
                 completion(false, exception.message)
             }
     }
-}
 
+    fun deletePost(postId: String, completion: FirestoreCompletion) {
+        db.collection(POSTS)
+            .document(postId)
+            .delete()
+            .addOnSuccessListener {
+                completion(true, null)
+            }
+            .addOnFailureListener { exception ->
+                completion(false, exception.message)
+            }
+    }
+}

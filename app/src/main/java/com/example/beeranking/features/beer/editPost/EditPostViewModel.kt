@@ -36,4 +36,17 @@ class EditPostViewModel : ViewModel() {
             }
         )
     }
+
+    fun deletePost(completion: (Boolean, String?) -> Unit) {
+        val post = postToEdit.value ?: return
+        postsRepository.deletePost(
+            post,
+            onSuccess = {
+                completion(true, null)
+            },
+            onError = { error ->
+                completion(false, error)
+            }
+        )
+    }
 }

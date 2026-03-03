@@ -104,4 +104,21 @@ class PostsRepository private constructor() {
             }
         }
     }
+
+    fun deletePost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        executor.execute {
+            firebaseModel.deletePost(post.id) { success, error ->
+                mainHandler.post {
+                    if (success) {
+                        executor.execute {
+                            database.postDao.deletePost(post)
+                        }
+                        onSuccess()
+                    } else {
+                        onError(error ?: "Unknown error")
+                    }
+                }
+            }
+        }
+    }
 }
