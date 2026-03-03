@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -68,9 +69,18 @@ class EditPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val post = args.post
-        viewModel.postToEdit.value = post
-        setupUI(post)
+        
+        loader.show()
+        viewModel.loadPost(args.postId) { success, error ->
+            loader.hide()
+            if (success) {
+                viewModel.postToEdit.value?.let { setupUI(it) }
+            } else {
+                Toast.makeText(requireContext(), error ?: "Failed to load post", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
+        }
+        
         setupObservers()
         setupListeners()
     }
@@ -158,8 +168,36 @@ class EditPostFragment : Fragment() {
                 updatePost()
             }
             
+            deleteButton.setOnClickListener {
+                showDeleteConfirmation()
+            }
+            
             addPhotoButton.setOnClickListener {
                 takeImage()
+            }
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Post")
+            .setMessage("Are you sure you want to delete this post?")
+            .setPositiveButton("Delete") { _, _ ->
+                deletePost()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deletePost() {
+        loader.show()
+        viewModel.deletePost { success, error ->
+            loader.hide()
+            if (success) {
+                Toast.makeText(requireContext(), "Post deleted successfully", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(requireContext(), error ?: "Failed to delete post", Toast.LENGTH_SHORT).show()
             }
         }
     }

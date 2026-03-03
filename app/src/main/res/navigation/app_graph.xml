@@ -41,8 +41,8 @@
         android:label="Edit Post"
         tools:layout="@layout/fragment_edit_post">
         <argument
-            android:name="post"
-            app:argType="com.example.beeranking.model.Post" />
+            android:name="postId"
+            app:argType="string" />
     </fragment>
     <action
         android:id="@+id/action_global_addPostFragment"

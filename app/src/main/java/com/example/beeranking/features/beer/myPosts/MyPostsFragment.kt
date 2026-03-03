@@ -1,6 +1,5 @@
 package com.example.beeranking.features.beer.myPosts
 
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.beeranking.features.beer.shared.postList.BasePostListFragment
@@ -11,7 +10,7 @@ class MyPostsFragment : BasePostListFragment() {
     override val viewModel: BasePostListViewModel by viewModels<MyPostsViewModel>()
 
     override fun handlePostClick(postWithUser: PostWithUser) {
-        val action = MyPostsFragmentDirections.actionMyPostsFragmentToEditPostFragment(postWithUser.post)
+        val action = MyPostsFragmentDirections.actionMyPostsFragmentToEditPostFragment(postWithUser.post.id)
         findNavController().navigate(action)
     }
 }

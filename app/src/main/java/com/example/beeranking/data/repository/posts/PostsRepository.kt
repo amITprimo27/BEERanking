@@ -41,6 +41,24 @@ class PostsRepository private constructor() {
         return database.postDao.getPostsByUserWithUser(userId)
     }
 
+    fun getPost(postId: String, completion: (Post?, String?) -> Unit) {
+        firebaseModel.getPost(postId) { post, error ->
+            if (post != null) {
+                executor.execute {
+                    if (post.isDeleted) {
+                        database.postDao.deletePost(post)
+                        mainHandler.post { completion(null, "Post was deleted") }
+                    } else {
+                        database.postDao.insertPost(post)
+                        mainHandler.post { completion(post, null) }
+                    }
+                }
+            } else {
+                mainHandler.post { completion(null, error) }
+            }
+        }
+    }
+
     fun refreshPosts() {
         val lastUpdated = Post.lastUpdated
 
@@ -51,7 +69,11 @@ class PostsRepository private constructor() {
             executor.execute {
                 var time = lastUpdated
                 for (post in posts) {
-                    database.postDao.insertPost(post)
+                    if (post.isDeleted) {
+                        database.postDao.deletePost(post)
+                    } else {
+                        database.postDao.insertPost(post)
+                    }
                     
                     post.lastUpdated?.let { postLastUpdated ->
                         if (time < postLastUpdated) {
@@ -95,6 +117,23 @@ class PostsRepository private constructor() {
                     if (success) {
                         executor.execute {
                             database.postDao.insertPost(post)
+                        }
+                        onSuccess()
+                    } else {
+                        onError(error ?: "Unknown error")
+                    }
+                }
+            }
+        }
+    }
+
+    fun deletePost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        executor.execute {
+            firebaseModel.deletePost(post.id) { success, error ->
+                mainHandler.post {
+                    if (success) {
+                        executor.execute {
+                            database.postDao.deletePost(post)
                         }
                         onSuccess()
                     } else {
