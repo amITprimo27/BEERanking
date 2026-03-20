@@ -6,26 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
-import com.canhub.cropper.CropImageView
 import com.example.beeranking.databinding.FragmentEditPostBinding
 import com.example.beeranking.features.beer.search.BeerSearchDialogFragment
 import com.example.beeranking.features.beer.search.BeerSearchViewModel
 import com.example.beeranking.model.Beer
 import com.example.beeranking.model.Post
+import com.example.beeranking.utilis.imageHandler.ImageHandler
 import com.example.beeranking.utilis.loader.LoadingIndicator
 import com.squareup.picasso.Picasso
-import java.io.File
 import java.util.Locale
 
 class EditPostFragment : Fragment() {
@@ -35,26 +29,18 @@ class EditPostFragment : Fragment() {
     private val args: EditPostFragmentArgs by navArgs()
     private val loader: LoadingIndicator by lazy { LoadingIndicator(requireContext()) }
 
-    private var latestTmpUri: Uri? = null
     private var imageToUploadUri: Uri? = null
 
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            val uriContent = result.uriContent
-            if (uriContent != null) {
-                imageToUploadUri = uriContent
-                binding?.postImageView?.setImageURI(uriContent)
-            }
-        } else {
-            val exception = result.error
-            Toast.makeText(requireContext(), "Cropping failed: ${exception?.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
+    private var imageHandler: ImageHandler? = null
 
-    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            latestTmpUri?.let { uri ->
-                startCrop(uri)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        imageHandler = ImageHandler(this, requireContext()) { uri ->
+            if (uri != null) {
+                imageToUploadUri = uri
+                binding?.postImageView?.setImageURI(uri)
+            } else {
+                Toast.makeText(requireContext(), "Image selection failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -83,23 +69,6 @@ class EditPostFragment : Fragment() {
         
         setupObservers()
         setupListeners()
-    }
-
-    private fun startCrop(uri: Uri) {
-        val cropOptions = CropImageOptions().apply {
-            guidelines = CropImageView.Guidelines.ON
-            aspectRatioX = 16
-            aspectRatioY = 9
-            fixAspectRatio = true
-            cropShape = CropImageView.CropShape.RECTANGLE
-        }
-        
-        cropImage.launch(
-            CropImageContractOptions(
-                uri,
-                cropOptions
-            )
-        )
     }
 
     private fun selectBeer(beer: Beer) {
@@ -173,9 +142,24 @@ class EditPostFragment : Fragment() {
             }
             
             addPhotoButton.setOnClickListener {
-                takeImage()
+                showImageSourceDialog()
             }
         }
+    }
+
+    private fun showImageSourceDialog() {
+        val options = listOf(
+            ImageHandler.ImageSource.CAMERA to "Take Photo",
+            ImageHandler.ImageSource.GALLERY to "Choose from Gallery"
+        )
+
+        val labels = options.map { it.second }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Image Source")
+            .setItems(labels) { _, which ->
+                imageHandler?.getImage(options[which].first, ImageHandler.CropConfig(16, 9))
+            }
+            .show()
     }
 
     private fun showDeleteConfirmation() {
@@ -200,22 +184,6 @@ class EditPostFragment : Fragment() {
                 Toast.makeText(requireContext(), error ?: "Failed to delete post", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun takeImage() {
-        getTmpFileUri().let { uri ->
-            latestTmpUri = uri
-            takePictureLauncher.launch(uri)
-        }
-    }
-
-    private fun getTmpFileUri(): Uri {
-        val tmpFile = File.createTempFile("tmp_image_file", ".png", requireContext().cacheDir).apply {
-            createNewFile()
-            deleteOnExit()
-        }
-
-        return FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", tmpFile)
     }
 
     private fun updatePost() {

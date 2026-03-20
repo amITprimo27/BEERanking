@@ -1,14 +1,12 @@
 package com.example.beeranking.features.beer.profile
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,10 +18,9 @@ import com.example.beeranking.data.models.FirebaseAuthModel
 import com.example.beeranking.databinding.FragmentProfileBinding
 import com.example.beeranking.features.beer.search.BeerSearchDialogFragment
 import com.example.beeranking.features.beer.search.BeerSearchViewModel
-import com.example.beeranking.model.Beer
+import com.example.beeranking.utilis.imageHandler.ImageHandler
 import com.example.beeranking.utilis.loader.LoadingIndicator
 import com.squareup.picasso.Picasso
-import java.io.ByteArrayOutputStream
 
 class ProfileFragment : Fragment() {
     private var binding: FragmentProfileBinding? = null
@@ -34,25 +31,17 @@ class ProfileFragment : Fragment() {
     private var selectedImageUri: Uri? = null
     private lateinit var favoriteBeerAdapter: FavoriteBeerAdapter
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            selectedImageUri = it
-            binding?.profileImage?.setImageURI(it)
-        }
-    }
+    private var imageHandler: ImageHandler? = null
 
-    private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        bitmap?.let {
-            binding?.profileImage?.setImageBitmap(it)
-            selectedImageUri = getImageUri(it)
-        }
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private fun getImageUri(inImage: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(requireContext().contentResolver, inImage, "Title", null)
-        return Uri.parse(path)
+        imageHandler = ImageHandler(this, requireContext()) { uri ->
+            uri?.let {
+                selectedImageUri = it
+                binding?.profileImage?.setImageURI(it)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -80,13 +69,13 @@ class ProfileFragment : Fragment() {
         binding?.editButton?.setOnClickListener { enterEditMode() }
 
         binding?.profileImage?.setOnClickListener {
-            if (binding?.cameraButton?.visibility == View.VISIBLE) { // Only allow image changes in edit mode
-                pickImage.launch("image/*")
+            if (binding?.cameraButton?.visibility == View.VISIBLE) {
+                showImageSourceDialog()
             }
         }
 
         binding?.cameraButton?.setOnClickListener {
-            takePicture.launch(null)
+            showImageSourceDialog()
         }
 
         binding?.saveButton?.setOnClickListener {
@@ -96,6 +85,20 @@ class ProfileFragment : Fragment() {
         binding?.addFavoriteBeerButton?.setOnClickListener {
             BeerSearchDialogFragment().show(parentFragmentManager, "BeerSearchDialog")
         }
+    }
+
+    private fun showImageSourceDialog() {
+        val options = listOf(
+            ImageHandler.ImageSource.CAMERA to "Take Photo",
+            ImageHandler.ImageSource.GALLERY to "Choose from Gallery"
+        )
+        val labels = options.map { it.second }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Image Source")
+            .setItems(labels) { _, which ->
+                imageHandler?.getImage(options[which].first, ImageHandler.CropConfig(1, 1))
+            }
+            .show()
     }
 
     private fun setupFavoriteBeersRecyclerView() {
@@ -179,7 +182,6 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
 
     private fun exitEditMode(newName: String) {
         binding?.usernameText?.text = newName
