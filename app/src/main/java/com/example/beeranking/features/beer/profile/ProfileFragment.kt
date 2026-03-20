@@ -32,7 +32,7 @@ class ProfileFragment : Fragment() {
     private val searchViewModel: BeerSearchViewModel by activityViewModels()
     private val loader: LoadingIndicator by lazy { LoadingIndicator(requireContext()) }
     private var selectedImageUri: Uri? = null
-    private lateinit var favoriteBeerAdapter: FavoriteBeerAdapter
+    private var favoriteBeerAdapter: FavoriteBeerAdapter? = null
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -129,7 +129,7 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.displayedFavoriteBeers.observe(viewLifecycleOwner) { beers ->
-            favoriteBeerAdapter.updateData(beers)
+            favoriteBeerAdapter?.updateData(beers)
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -155,9 +155,9 @@ class ProfileFragment : Fragment() {
         binding?.usernameEditText?.setText(viewModel.user.value?.userName)
         binding?.profileImage?.isClickable = true
         binding?.addFavoriteBeerButton?.visibility = View.VISIBLE
-        favoriteBeerAdapter.setEditMode(true)
+        favoriteBeerAdapter?.setEditMode(true)
 
-        binding?.editButton?.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+        binding?.editButton?.setImageResource(R.drawable.ic_add_post)
         binding?.editButton?.setOnClickListener {
             Toast.makeText(context, "Changes discarded", Toast.LENGTH_SHORT).show()
             viewModel.user.value?.let { viewModel.loadFavoriteBeers(it.favoriteBeers) }
@@ -190,7 +190,7 @@ class ProfileFragment : Fragment() {
         binding?.profileImage?.isClickable = false
         selectedImageUri = null
         binding?.addFavoriteBeerButton?.visibility = View.GONE
-        favoriteBeerAdapter.setEditMode(false)
+        favoriteBeerAdapter?.setEditMode(false)
 
         binding?.editButton?.setImageResource(R.drawable.ic_edit)
         binding?.editButton?.setOnClickListener { enterEditMode() }

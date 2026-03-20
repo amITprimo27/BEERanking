@@ -62,7 +62,6 @@ class PostsRepository private constructor() {
     fun refreshPosts() {
         val lastUpdated = Post.lastUpdated
 
-        // First, refresh users to ensure we have the latest profiles
         UsersRepository.shared.refreshUsers()
 
         firebaseModel.getAllPosts(lastUpdated) { posts ->

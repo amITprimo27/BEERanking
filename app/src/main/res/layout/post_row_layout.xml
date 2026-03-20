@@ -8,7 +8,6 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
-    <!-- User Section -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_avatar_image_view"
         android:layout_width="48dp"
@@ -47,7 +46,6 @@
         app:layout_constraintTop_toBottomOf="@id/user_name_text_view"
         tools:text="Dogfish Head By Dishtop Hop IPA" />
 
-    <!-- Post Image Section -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/post_image_card"
         android:layout_width="match_parent"
@@ -69,7 +67,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
-            <!-- Rating Overlay -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +112,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Post Description -->
     <TextView
         android:id="@+id/post_description_text_view"
         android:layout_width="0dp"
@@ -128,7 +124,6 @@
         app:layout_constraintTop_toBottomOf="@id/post_image_card"
         tools:text="This is a great beer! Highly recommended for hop lovers. The brewery really nailed the balance here." />
 
-    <!-- Separator Line -->
     <View
         android:id="@+id/separator_line"
         android:layout_width="match_parent"

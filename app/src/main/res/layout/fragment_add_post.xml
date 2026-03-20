@@ -7,7 +7,6 @@
     android:background="#F4F0FF"
     tools:context=".features.beer.addPost.AddPostFragment">
 
-    <!-- Header Section -->
     <ImageButton
         android:id="@+id/back_button"
         android:layout_width="48dp"
@@ -35,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/back_button" />
 
-    <!-- White Rounded Content Area -->
     <androidx.cardview.widget.CardView
         android:id="@+id/content_card"
         android:layout_width="0dp"
@@ -63,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp">
 
-                <!-- Post Image with rounded corners -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/image_card"
                     android:layout_width="0dp"
@@ -84,7 +81,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Add Photo Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_photo_button"
                     style="@style/Widget.Material3.Button.TonalButton"
@@ -102,7 +98,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image_card" />
 
-                <!-- Beer Selection Section -->
                 <TextView
                     android:id="@+id/beer_selection_title"
                     android:layout_width="wrap_content"
@@ -134,7 +129,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/beer_selection_title" />
 
-                <!-- Rating Section -->
                 <TextView
                     android:id="@+id/rating_title"
                     android:layout_width="wrap_content"
@@ -217,7 +211,6 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- Details Section -->
                 <TextView
                     android:id="@+id/details_title"
                     android:layout_width="wrap_content"
