@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.beeranking.R
 import com.example.beeranking.data.models.FirebaseAuthModel
 import com.example.beeranking.databinding.FragmentProfileBinding
-import com.example.beeranking.features.beer.search.BeerSearchDialogFragment
-import com.example.beeranking.features.beer.search.BeerSearchViewModel
+import com.example.beeranking.features.beer.shared.beerSearch.BeerSearchDialogFragment
+import com.example.beeranking.features.beer.shared.beerSearch.BeerSearchViewModel
 import com.example.beeranking.utilis.imageHandler.ImageHandler
 import com.example.beeranking.utilis.loader.LoadingIndicator
 import com.squareup.picasso.Picasso
