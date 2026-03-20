@@ -66,7 +66,6 @@ class BeerSearchDialogFragment : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Clear the search results when the dialog is closed
         viewModel.clearSearch()
         binding = null
     }

@@ -157,7 +157,7 @@ class ProfileFragment : Fragment() {
         binding?.addFavoriteBeerButton?.visibility = View.VISIBLE
         favoriteBeerAdapter?.setEditMode(true)
 
-        binding?.editButton?.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+        binding?.editButton?.setImageResource(R.drawable.ic_add_post)
         binding?.editButton?.setOnClickListener {
             Toast.makeText(context, "Changes discarded", Toast.LENGTH_SHORT).show()
             viewModel.user.value?.let { viewModel.loadFavoriteBeers(it.favoriteBeers) }

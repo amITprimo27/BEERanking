@@ -7,7 +7,6 @@
     android:background="#D4C5F9"
     tools:context=".features.login.signup.SignupFragment">
 
-    <!-- Top Purple Section with Beer Icon -->
     <ImageView
         android:id="@+id/logo_image_view"
         android:layout_width="match_parent"
@@ -21,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!-- Main Content ScrollView -->
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -54,7 +52,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- BEERanking title -->
             <TextView
                 android:id="@+id/beer_ranking_title_text_view"
                 android:layout_width="match_parent"
@@ -70,7 +67,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Description -->
             <TextView
                 android:id="@+id/welcome_description_text_view"
                 android:layout_width="match_parent"
@@ -86,7 +82,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Sign up button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_up_button"
                 android:layout_width="match_parent"
@@ -102,7 +97,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Sign in button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
