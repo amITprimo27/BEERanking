@@ -6,14 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.beeranking.R
-import com.example.beeranking.data.repository.users.UsersRepository
 import com.example.beeranking.databinding.FragmentLoginBinding
 import com.example.beeranking.utilis.loader.LoadingIndicator
 
 class LoginFragment : Fragment() {
     private var binding: FragmentLoginBinding? = null
+    private val viewModel: LoginViewModel by viewModels()
     private val loader: LoadingIndicator by lazy { LoadingIndicator(requireContext()) }
 
     override fun onCreateView(
@@ -21,51 +22,48 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         this.binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
-
         return this.binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.signInButton?.setOnClickListener { onLoginButtonClicked() }
+        setupObservers()
+
+        binding?.signInButton?.setOnClickListener {
+            val email = binding?.emailEditText?.text.toString()
+            val password = binding?.passwordEditText?.text.toString()
+            viewModel.login(email, password)
+        }
         binding?.signupTextView?.setOnClickListener { onToSignupButtonClicked() }
     }
 
-    private fun onLoginButtonClicked() {
-        val email = binding?.emailEditText?.text.toString()
-        val password = binding?.passwordEditText?.text.toString()
-
-        if (email.isBlank() || password.isBlank()) {
-            Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
+    private fun setupObservers() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                loader.show()
+                disableLoginButton()
+            } else {
+                loader.hide()
+                enableLoginButton()
+            }
         }
 
-        if (!isValidEmail(email)) {
-            Toast.makeText(requireContext(), "Please enter a valid email address", Toast.LENGTH_SHORT).show()
-            return
+        viewModel.loginSuccess.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                findNavController().navigate(R.id.action_global_app_graph)
+            }
         }
 
-        loader.show()
-        disableLoginButton()
-
-        UsersRepository.shared.loginUser(email, password, { loginUser ->
-            loader.hide()
-
-            findNavController().navigate(R.id.action_global_app_graph)
-        }, { errorMessage ->
-            loader.hide()
-            enableLoginButton()
-            Toast.makeText(requireContext(), errorMessage ?: "An error occurred", Toast.LENGTH_SHORT).show()
-        })
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun onToSignupButtonClicked() {
         findNavController().navigate(R.id.action_login_to_signup)
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun disableLoginButton() {
