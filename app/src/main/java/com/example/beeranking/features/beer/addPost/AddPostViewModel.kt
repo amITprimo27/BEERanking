@@ -36,6 +36,7 @@ class AddPostViewModel : ViewModel() {
             beerType = beer.style,
             beerAlcoholPercentage = beer.abv ?: 0f,
             beerBrewery = beer.brewer?.name ?: "",
+            createdOn = System.currentTimeMillis() / 1000
         )
 
         postsRepository.addPost(

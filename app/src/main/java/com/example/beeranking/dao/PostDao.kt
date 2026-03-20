@@ -12,15 +12,15 @@ import com.example.beeranking.model.PostWithUser
 
 @Dao
 interface PostDao {
-    @Query("SELECT * FROM Post WHERE isDeleted = false")
+    @Query("SELECT * FROM Post WHERE isDeleted = false ORDER BY createdOn DESC")
     fun getAllPosts(): LiveData<MutableList<Post>>
 
     @Transaction
-    @Query("SELECT * FROM Post WHERE isDeleted = false")
+    @Query("SELECT * FROM Post WHERE isDeleted = false ORDER BY createdOn DESC")
     fun getAllPostsWithUser(): LiveData<MutableList<PostWithUser>>
 
     @Transaction
-    @Query("SELECT * FROM Post WHERE postedBy = :userId AND isDeleted = false")
+    @Query("SELECT * FROM Post WHERE postedBy = :userId AND isDeleted = false ORDER BY createdOn DESC")
     fun getPostsByUserWithUser(userId: String): LiveData<MutableList<PostWithUser>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
