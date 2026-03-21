@@ -1,4 +1,4 @@
-package com.example.beeranking.features.beer.search
+package com.example.beeranking.features.beer.shared.beerSearch
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.beeranking.features.beer.search
+package com.example.beeranking.features.beer.shared.beerSearch
 
 import android.util.Log
 import androidx.lifecycle.LiveData

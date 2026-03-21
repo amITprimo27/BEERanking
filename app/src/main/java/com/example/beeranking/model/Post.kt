@@ -25,7 +25,8 @@ data class Post (
     val beerType: String,
     val beerAlcoholPercentage: Float,
     val beerBrewery: String,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
+    val createdOn: Long? = null
 ): Parcelable {
     companion object {
         var lastUpdated: Long
@@ -53,6 +54,7 @@ data class Post (
         const val BEER_ALCOHOL_PERCENTAGE_KEY = "beerAlcoholPercentage"
         const val BEER_BREWERY_KEY = "beerBrewery"
         const val IS_DELETED_KEY = "isDeleted"
+        const val CREATED_ON_KEY = "createdOn"
 
         fun fromJson(json: Map<String, Any?>): Post {
             val id = json[ID_KEY] as String
@@ -61,6 +63,12 @@ data class Post (
             val rating = (json[RATING_KEY] as? Number)?.toFloat() ?: 0f
             
             val lastUpdated = when (val value = json[LAST_UPDATED_KEY]) {
+                is Timestamp -> value.seconds
+                is Long -> value
+                else -> null
+            }
+
+            val createdOn = when (val value = json[CREATED_ON_KEY]) {
                 is Timestamp -> value.seconds
                 is Long -> value
                 else -> null
@@ -84,7 +92,8 @@ data class Post (
                 beerType = beerType,
                 beerAlcoholPercentage = beerAlcoholPercentage,
                 beerBrewery = beerBrewery,
-                isDeleted = isDeleted
+                isDeleted = isDeleted,
+                createdOn = createdOn
             )
         }
     }
@@ -101,6 +110,7 @@ data class Post (
             BEER_TYPE_KEY to this.beerType,
             BEER_ALCOHOL_PERCENTAGE_KEY to this.beerAlcoholPercentage,
             BEER_BREWERY_KEY to this.beerBrewery,
-            IS_DELETED_KEY to this.isDeleted
+            IS_DELETED_KEY to this.isDeleted,
+            CREATED_ON_KEY to (createdOn?.let { Timestamp(it, 0) } ?: FieldValue.serverTimestamp())
         )
 }

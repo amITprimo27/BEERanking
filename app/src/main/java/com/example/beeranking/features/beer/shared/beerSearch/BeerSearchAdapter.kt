@@ -1,5 +1,6 @@
-package com.example.beeranking.features.beer.search
+package com.example.beeranking.features.beer.shared.beerSearch
 
+import android.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ class BeerSearchAdapter(
 ) : RecyclerView.Adapter<BeerSearchAdapter.BeerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BeerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.simple_list_item_2, parent, false)
         return BeerViewHolder(view)
     }
 
@@ -34,7 +35,7 @@ class BeerSearchAdapter(
     }
 
     class BeerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val text1: TextView = itemView.findViewById(android.R.id.text1)
-        val text2: TextView = itemView.findViewById(android.R.id.text2)
+        val text1: TextView = itemView.findViewById(R.id.text1)
+        val text2: TextView = itemView.findViewById(R.id.text2)
     }
 }

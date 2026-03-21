@@ -13,8 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.beeranking.databinding.FragmentEditPostBinding
-import com.example.beeranking.features.beer.search.BeerSearchDialogFragment
-import com.example.beeranking.features.beer.search.BeerSearchViewModel
+import com.example.beeranking.features.beer.shared.beerSearch.BeerSearchDialogFragment
+import com.example.beeranking.features.beer.shared.beerSearch.BeerSearchViewModel
 import com.example.beeranking.model.Beer
 import com.example.beeranking.model.Post
 import com.example.beeranking.utilis.imageHandler.ImageHandler
